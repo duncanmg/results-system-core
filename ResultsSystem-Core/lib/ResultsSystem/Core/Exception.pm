@@ -60,19 +60,23 @@ sub new {
 =head2 stringify
 
 This Exception object, ResultsSystem::Core::Exception->new( 'NO_SYSTEM', 'System is not set.' ),
-stringifies to 'NO_SYSTEM,System is not set.' . "\n"
+stringifies to 'ResultsSystem::Core::Exception,NO_SYSTEM,System is not set.' . "\n"
 
 This Exception object, ResultsSystem::Core::Exception->new( 'MIDDLE', 'Middle exception', 
 ResultsSystem::Core::Exception->new( 'NO_SYSTEM', 'System is not set.' )), stringifies to
-"MIDDLE,Middle exception,NO_SYSTEM,System is not set.\n"
+"ResultsSystem::Core::Exception,MIDDLE,Middle exception,ResultsSystem::Core::Exception,NO_SYSTEM,System is not set.\n"
+
+Plus caller info:
+
+eg ResultsSystem::Core::Exception,TEST,Something bad happened,main,t/exception.t,10
 
 =cut
 
 sub stringify {
   my ($self) = @_;
   my $line = [
-    $self->get_code,     $self->get_message, $self->get_package,
-    $self->get_filename, $self->get_line
+    $self->get_class_name, $self->get_code,     $self->get_message,
+    $self->get_package,    $self->get_filename, $self->get_line
   ];
   push @$line, $self->get_previous if $self->get_previous;
 
@@ -110,6 +114,8 @@ sub get_package { my $self = shift; return $self->{package}; }
 sub get_filename { my $self = shift; return $self->{filename}; }
 
 sub get_line { my $self = shift; return $self->{line}; }
+
+sub get_class_name { my $self = shift; return ref($self); }
 
 =head1 INTERNAL (PRIVATE) METHODS
 

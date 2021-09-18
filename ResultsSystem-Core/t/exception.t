@@ -21,11 +21,11 @@ like( $err, qr/TEST,Something bad happened/, 'Stringified object is correct' );
 
 like(
   $err,
-  qr/^TEST,Something bad happened,main,t\/exception.t,10$/,
+  qr/^ResultsSystem::Core::Exception,TEST,Something bad happened,main,t\/exception.t,10$/,
   'Stringified object has additional data appended'
 );
 
-unlike( $err, qr/ResultsSystem/, 'Stringified error does not contain object type' );
+like( $err, qr/ResultsSystem::Core::Exception/, 'Stringified error does contain object type' );
 
 subtest 'Recursion' => sub {
 
@@ -40,6 +40,6 @@ subtest 'Recursion' => sub {
 
   isa_ok( $error, 'ResultsSystem::Core::Exception' );
 
-  like($error, qr/^B,Message B,main,t\/exception\.t,35,A,Message A,main,t\/exception\.t,34\n$/, 'Recursion is correct');
+  like($error, qr/^ResultsSystem::Core::Exception,B,Message B,main,t\/exception\.t,35,ResultsSystem::Core::Exception,A,Message A,main,t\/exception\.t,34\n$/, 'Recursion is correct');
 };
 done_testing;
